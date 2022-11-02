@@ -83,7 +83,6 @@ const search = async (url) => {
     const res = await fetch(url);
     if (res.status = 200) {
       const response = await res.json();
-      console.log(res);
       return response;
     } else {
       console.log(res);
