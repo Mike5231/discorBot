@@ -39,7 +39,6 @@ function createEmbed(response = '', name = '', message) {
     .setDescription("ANIME DOES NOT EXISTS!")
     .setThumbnail('https://cdn.dribbble.com/users/63485/screenshots/4331748/002_maze_beautiful_errors_final.gif')
     .setImage('https://ginbits.com/wp-content/uploads/2021/08/How-to-Fix-500-Internal-Server-Error.png');
-    console.log(response.data)
   if (data.length > 0) {
     let name2 = response.data[0].attributes.synopsis;
     let status = response.data[0].attributes.status;
