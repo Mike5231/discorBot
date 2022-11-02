@@ -2,8 +2,8 @@ const Discord = require("discord.js");
 const fetch = require("node-fetch");
 const moment = require("moment");
 const bot = new Discord.Client();
-const token = process.env['token'];
-let XMLHttpRequest = require('xhr2');
+const token = 'X72Exz5GaHttPZXD5V';
+const token2 = 'Nq620-Nf0vq571';
 const url = 'https://kitsu.io/api/edge/anime';
 
 bot.on("ready", function() {
@@ -135,4 +135,4 @@ function createRouteFlv(animeName) {
 }
 
 
-bot.login(token);
+bot.login(token + token2);
