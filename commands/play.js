@@ -60,7 +60,7 @@ module.exports = {
                 .setFooter({ text: `Duration: ${song.duration}`})
 
 		}
-        /*else if (interaction.options.getSubcommand() === "playlist") {
+        else if (interaction.options.getSubcommand() === "playlist") {
 
             // Search for the playlist using the discord-player
             let url = interaction.options.getString("url")
@@ -77,9 +77,9 @@ module.exports = {
             await queue.addTracks(result.tracks)
             embed
                 .setDescription(`**${result.tracks.length} songs from [${playlist.title}](${playlist.url})** have been added to the Queue`)
-                .setThumbnail(playlist.thumbnail)
+                //.setThumbnail(playlist.thumbnail)
 
-		} */
+		} 
         else if (interaction.options.getSubcommand() === "search") {
 
             // Search for the song using the discord-player

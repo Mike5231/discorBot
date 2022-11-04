@@ -1,9 +1,7 @@
 require('dotenv').config();
-const fetch = require("node-fetch");
 const moment = require("moment");
 const token = process.env['token'];
 const clientid = process.env['client'];
-const url = 'https://kitsu.io/api/edge/anime';
 const {
     REST
 } = require('@discordjs/rest');
@@ -14,7 +12,8 @@ const {
     Client,
     GatewayIntentBits,
     Collection,
-    EmbedBuilder
+    EmbedBuilder,
+    ActivityType
 } = require('discord.js');
 const {
     Player
@@ -25,7 +24,7 @@ const path = require('path');
 
 
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates]
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.MessageContent]
 });
 
 // List of all commands
@@ -49,9 +48,8 @@ client.player = new Player(client, {
         highWaterMark: 1 << 25
     }
 })
-
-client.on("ready", () => {
-    // Get all ids of the servers
+client.on("ready", function() {
+    presence();
     const guild_ids = client.guilds.cache.map(guild => guild.id);
     const rest = new REST({
         version: '9'
@@ -60,10 +58,11 @@ client.on("ready", () => {
         rest.put(Routes.applicationGuildCommands(clientid, guildId), {
                 body: commands
             })
-            .then(() => console.log('Successfully updated commands for guild ' + guildId))
+            .then(() => 
+            console.log('Successfully updated commands for guild ' + guildId))
             .catch(console.error);
     }
-});
+  });
 
 client.on("interactionCreate", async interaction => {
     if (!interaction.isCommand()) return;
@@ -84,7 +83,7 @@ client.on("interactionCreate", async interaction => {
     }
 });
 
-client.on("message", message => {
+/*client.on("message", message => {
     if (message.content.indexOf(".aimg") === 0) {
         const name = message.content;
         const animeName = name.split('');
@@ -96,14 +95,12 @@ client.on("message", message => {
                 sendMessage(createEmbed(response, animeName, message), message));
         console.log("Execution complete for embed file: " + message.author.username);
     }
-
-});
+});*/
 //Example embed
 function createEmbed(response = '', name = '', message) {
     let data = response.data;
     const embedDefault = new EmbedBuilder()
         .setTitle("500")
-        .setColor('RANDOM')
         .setDescription("ANIME DOES NOT EXISTS!")
         .setThumbnail('https://cdn.dribbble.com/users/63485/screenshots/4331748/002_maze_beautiful_errors_final.gif')
         .setImage('https://ginbits.com/wp-content/uploads/2021/08/How-to-Fix-500-Internal-Server-Error.png');
@@ -114,14 +111,13 @@ function createEmbed(response = '', name = '', message) {
         let abbreviatedTitles = response.data[0].attributes.abbreviatedTitles;
         const embed = new EmbedBuilder()
             .setTitle(response.data[0].attributes.titles.en)
-            .setColor('RANDOM')
             .setDescription(descriptionCreater(name2))
-            .addField('Extra names', abbreviatedTitles.length > 0 ? abbreviatedTitles : "Does not exists")
-            .addField('Next episode', status != "current" ? "Finished" : date == "Invalid date" ? "No date" : date, true)
-            .setAuthor(client.user.username, client.user.avatarURL())
+            //.addField('Extra names', abbreviatedTitles.length > 0 ? abbreviatedTitles : "Does not exists")
+            //.addField('Next episode', status != "current" ? "Finished" : date == "Invalid date" ? "No date" : date, true)
+            //.setAuthor(client.user.username, client.user.avatarURL())
             .setImage(response.data[0].attributes.posterImage.medium)
             .setURL(createRouteFlv(name.join('')))
-            .setFooter('Requested by: ' + message.member.displayName, message.author.avatarURL());
+            //.setFooter('Requested by: ' + message.member.displayName, message.author.avatarURL());
         return embed;
     }
     return embedDefault;
@@ -145,7 +141,7 @@ function descriptionCreater(cadena = '') {
     return extraida;
 }
 
-const search = async (url) => {
+/*const search = async (url) => {
     try {
         const res = await fetch(url);
         if (res.status = 200) {
@@ -158,16 +154,13 @@ const search = async (url) => {
     } catch (err) {
         console.error(err);
     }
-}
+}*/
 
 function presence() {
     client.user.setPresence({
+        activities: [{ name: `Play Wano`, type: ActivityType.Playing }],
         status: 'online',
-        activity: {
-            name: "Pongan Wano",
-            type: "PLAYING"
-        }
-    })
+      });
 }
 
 function removeItemFromArr(arr) {
